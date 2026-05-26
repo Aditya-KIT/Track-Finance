@@ -1,11 +1,8 @@
 import axios from 'axios';
+import API_BASE_URL from '../config/api';
 
 const getBaseURL = () => {
-    const envUrl = import.meta.env.VITE_API_URL;
-    if (envUrl) {
-        return envUrl.endsWith('/api') ? envUrl : `${envUrl}/api`;
-    }
-    return 'http://localhost:8080/api';
+    return API_BASE_URL.endsWith('/api') ? API_BASE_URL : `${API_BASE_URL}/api`;
 };
 
 const api = axios.create({
