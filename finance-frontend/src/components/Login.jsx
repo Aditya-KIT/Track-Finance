@@ -17,7 +17,11 @@ function Login() {
             login(response.data.token, response.data.roles || []);
             navigate('/dashboard');
         } catch (err) {
-            setError('Invalid credentials');
+            if (!err.response) {
+                setError('Login failed! Could not reach the server. Please check if your backend is running and CORS is configured.');
+            } else {
+                setError(err.response?.data?.message || 'Invalid credentials');
+            }
         }
     };
 

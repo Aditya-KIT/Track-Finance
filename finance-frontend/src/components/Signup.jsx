@@ -28,7 +28,18 @@ function Signup() {
             setSuccess('Registration complete. Please wait for an Admin to approve your account before logging in.');
             setTimeout(() => navigate('/'), 4000); // Redirect to login after 4 seconds
         } catch (err) {
-            setError(err.response?.data?.message || 'Registration failed! Username or Email might be taken.');
+            if (!err.response) {
+                setError('Registration failed! Could not reach the server. Please check if your backend is running and CORS is configured.');
+            } else {
+                const backendError = err.response.data?.error || err.response.data?.message || err.response.data;
+                const errorStr = typeof backendError === 'object' ? JSON.stringify(backendError) : String(backendError);
+                
+                if (errorStr.toLowerCase().includes('taken') || errorStr.toLowerCase().includes('use') || errorStr.toLowerCase().includes('exist')) {
+                    setError('Account already exists!');
+                } else {
+                    setError(errorStr ? `Error in registering: ${errorStr}` : 'Error in registering');
+                }
+            }
         }
     };
 
